@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Album</title>
+
+    <style>
+        @keyframes rotate-upwards {
+            0%{
+                transform: rotateX(0deg);
+
+            }
+            100%{
+                transform: rotateX(90deg);
+            }
+        }
+        @keyframes rotate-downwards {
+            0%{
+                transform: rotateX(90deg);
+
+            }
+            100%{
+                transform: rotateX(0deg);
+            }
+        }
+        @keyframes move-downwards-12 {
+            0%{
+               top : 200px;
+            }
+            100%{
+                top : 250px;
+            }
+        }
+        @keyframes move-upwards-12 {
+            0%{
+               top : 250px;
+            }
+            100%{
+               top : 200px;
+            }
+        }
+        @keyframes move-downwards-23 {
+            0%{
+               top : 250px;
+            }
+            100%{
+               top : 300px;
+            }
+        }
+        @keyframes move-upwards-23 {
+            0%{
+               top : 300px;
+            }
+            100%{
+               top : 250px;
+            }
+        }
+        @keyframes move-downwards-34 {
+            0%{
+               top : 300px;
+            }
+            100%{
+               top : 350px;
+            }
+        }
+        @keyframes move-upwards-34 {
+            0%{
+               top : 350px;
+            }
+            100%{
+               top : 300px;
+            }
+        }
+        @keyframes open-page-right {
+            0%{
+                transform:  rotateY(0deg);
+            }
+            100%{
+                transform:  rotateY(180deg);
+            }
+        }
+        @keyframes open-page-left {
+            0%{
+                transform: rotateY(0deg);
+            }
+            100%{
+                transform: rotateY(-180deg);
+            }
+        }
+        @keyframes close-page-right {
+            0%{
+                transform: translateX(-100%) rotateY(0deg);
+            }
+            100%{
+                transform: translateX(-100%) rotateY(180deg);
+            }
+        }
+        @keyframes close-page-left {
+            0%{
+                transform: translateX(100%) rotateY(0deg);
+            }
+            100%{
+                transform: translateX(100%) rotateY(-180deg);
+            }
+        }
+        @keyframes open-swindow-right {
+            0%{
+                right:8%;
+            }
+            100%{
+                right:-22%;
+            }
+        }
+        @keyframes open-swindow-left {
+            0%{
+                left:8%;
+            }
+            100%{
+                left:-22%;
+            }
+        }
+        @keyframes close-swindow-right {
+            0%{
+                right:-22%;
+            }
+            100%{
+                right:8%;
+            }
+        }
+        @keyframes close-swindow-left {
+            0%{
+                left:-22%;
+            }
+            100%{
+                left:8%;
+            }
+        }
+
+        .scene {
+            width: 800px;
+            height: 560px;
+            perspective: 3000px;
+            display: flex;
+            justify-content: start;
+            align-content: flex-start ;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 60px;
+        }
+        .card {
+            width:50%;
+            height:100%;
+            position: absolute;
+            transition: transform 1s;
+            transform-style: preserve-3d;
+            transform-origin: right;
+            margin: 0;
+            background-color:rgb(41, 111, 143);
+            border : black solid 20px;
+        }
+        .card__face {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            backface-visibility: hidden;
+        }
+        .card__face--front{
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            background: black;
+            flex-direction: row;
+        }
+        .card__face--back {
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            background: black;
+            flex-direction: column;
+            transform: rotateY(180deg);
+        }
+        #card1{
+            z-index: 2;
+        }
+        #card2{
+            z-index: 3;
+        }
+        #page1{
+            background-color:black;
+            z-index : 2;
+        }
+        #page2{
+            background-color:rgb(41, 111, 143);
+        }
+        #page3{
+            position:relative;
+            background-color:rgb(41, 111, 143);
+        }
+        #page4{
+            background-color:black;
+        }
+        #firstpageimgbck{
+            margin-top : 10%;
+            width : 90%;
+            height : 40%;
+            display : flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #mainbck{
+            width : 70%;
+            height : 90%;
+            z-index: 1;
+        }
+        .sidewin{
+            height:140px;
+            width: 45%;
+            background-color: rgba(40,40,40,0.8);
+            position: absolute;
+            z-index: 0;
+            cursor: crosshair;
+            color : white;
+            display: flex;
+            align-items: center;
+            padding-left: 10% ;
+            padding-right: 10% ;
+        }
+        #sidewin1{
+            padding-left: 10% ;
+            padding-right: 10% ;
+            left: 8%;
+            font-size: 1.4em;
+        }
+        #sidewin2{
+            padding-left: 20% ;
+            padding-right: 0% ;
+            justify-content: center ;
+            right: 8%;
+            font-size: 1.4em;
+        }
+        stk{
+            height:270px;
+            width:16%;
+            background-color: red;
+            position:absolute;
+            top : 200px;
+            z-index: 0;
+            animation: none;
+            cursor: pointer;
+        }
+        h1{
+            margin-top: 60px;
+            color: white;
+            font-size: 2.6em;
+            text-align: center;
+            font-family: cursive ;
+        }
+        bck{
+            height: 50%;
+            width : 50%;
+            border : 8px solid black;
+            padding : 4px 2%;
+            background-color: red;
+            transform-origin: top;
+        }
+        bck > img{
+            height: 100%;
+            width: 100%;
+        }
+        #bck1{
+            position: relative;
+            top: 30%;
+            z-index: 4;
+        }
+        #bck2{
+            position: relative;
+            top: 10%;
+            z-index: 3;
+        }
+        #bck3{
+            position: relative;
+            bottom: 10%;
+            z-index: 2;
+        }
+        #bck4{
+            position: relative;
+            bottom: 30%;
+            z-index: 1;
+        }
+        .win{
+            height: 24em;
+            width: 10em;
+            border: red solid 2px;
+            z-index: 1;
+            cursor: pointer;
+        }
+        #win1{
+            background: lightsalmon;
+            transform-origin: left;
+        }
+        #win2{
+            background: lightblue;
+            transform-origin: right;
+        }
+        #behindwindow{
+            position: absolute;
+            height: 23em;
+            width :80%;
+            z-index: 0;
+            left:10%;
+            top:100px;
+        }
+        button{
+            position: absolute;
+            bottom : 0;
+            background-color: rgb(41, 111, 143);
+            border: none;
+            font-size: 2.5em;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+        }
+        #SecondtoFirstPg{
+            left : 0;
+        }
+        #ThirdtoSecondPg{
+            left : 0;
+            background-color: black;
+        }
+        #FirsttoSecondPg{
+            right: 0;
+            background-color: black;
+        }
+        #SecondtoThirdPg{
+            right: 0;
+        }
+
+    </style>
+
+    <script>
+        sopening = false;
+        sopen = false;
+        function openSideWindows(){
+            if(sopening){
+                return;
+            }
+            sopening = true;
+            setTimeout(function(){
+                sopening = false;
+            },1000);
+            if(sopen == false){
+                let sw1 = document.getElementById("sidewin1");
+                let sw2 = document.getElementById("sidewin2");
+                sw1.style.animation = "open-swindow-left 1s linear 0s 1 normal forwards"
+                sw2.style.animation = "open-swindow-right 1s linear 0s 1 normal forwards"
+                sopen = true;
+                return;
+            }
+            if(sopen){
+                let sw1 = document.getElementById("sidewin1");
+                let sw2 = document.getElementById("sidewin2");
+                sw1.style.animation = "close-swindow-left 1s linear 0s 1 normal forwards"
+                sw2.style.animation = "close-swindow-right 1s linear 0s 1 normal forwards"
+                sopen = false;
+            }
+        }
+        var atSecondPage = false;
+
+        var open = false;
+        var opening = false;
+
+        function changeWindow(){
+            if(opening || atSecondPage == false) {
+                return;
+            }
+            opening = true;
+            setTimeout(function(){
+                opening = false;
+            }, 1000);
+            if(open == false){
+                document.getElementById("win1").style.transformOrigin = "left";
+                document.getElementById("win2").style.transformOrigin = "right";
+                document.getElementById("win1").style.animation = "open-page-left 1s linear 0s 1 normal forwards";
+                document.getElementById("win2").style.animation = "open-page-right 1s linear 0s 1 normal forwards";
+                open = true;
+                return;
+            }
+            if(open){
+                document.getElementById("win1").style.transformOrigin = "right";
+                document.getElementById("win2").style.transformOrigin = "left";
+                document.getElementById("win1").style.animation = "close-page-right 1s linear 0s 1 normal forwards";
+                document.getElementById("win2").style.animation = "close-page-left 1s linear 0s 1 normal forwards";
+                open = false;
+            }
+        }
+
+        var flipping = false;
+
+        function SecondtoFirst() {
+            if(flipping || opening){
+                return;
+            }
+            flipping=true;
+            if(open){
+                changeWindow();
+            }
+            setTimeout(function (){
+                flipping = false;
+                atSecondPage = false;
+            },1000);
+            let a = document.getElementById("card1");
+            a.style.transform = "translateX(0%) rotateY(180deg)";
+            return;
+        }
+        function FirsttoSecond() {
+            if(flipping || opening){
+                return;
+            }
+            flipping=true;
+            setTimeout(function (){
+                flipping = false;
+                atSecondPage = true;
+            },1000);
+            let a = document.getElementById("card1");
+            a.style.transform = "translateX(0) rotateY(0deg)";
+        }
+        function ThirdtoSecond(){
+            if(flipping || opening){
+                return;
+            }
+            flipping=true;
+            let a = document.getElementById("card2");
+            a.style.transform = "translateX(0%) rotateY(180deg)";
+            setTimeout(function (){
+                a.style.zIndex = "1";
+                flipping = false;
+                atSecondPage = true;
+            },1000);
+        }
+        function SecondtoThird(){
+            if(flipping || opening){
+                return;
+            }
+            flipping=true;
+            if(open){
+                changeWindow();
+            }
+            let a = document.getElementById("card2");
+            a.style.transform = "translateX(0) rotateY(0deg)";
+            a.style.zIndex = "3";
+            setTimeout(function (){
+                flipping = false;
+                atSecondPage = false;
+            },1000);
+        }
+
+        var state = 1;
+        var rotating = false;
+        var returning = false;
+        function changePhoto() {
+            if(rotating){
+                return;
+            }
+            rotating = true;
+            setTimeout(function(){
+                rotating = false;
+            }, 2000);
+            if(state == 1 && returning == false) {
+                document.getElementById("bck1").style.animation = "rotate-upwards 2s linear 0s 1 normal forwards";
+                document.getElementById("stk").style.animation = "move-downwards-12 2s linear 0s 1 normal forwards";
+                state++;
+                return;
+            }
+            if(state == 2 && returning == false) {
+                document.getElementById("bck2").style.animation = "rotate-upwards 2s linear 0s 1 normal forwards";
+                document.getElementById("stk").style.animation = "move-downwards-23 2s linear 0s 1 normal forwards";
+                state++;
+                return;
+            }
+            if(state == 3 && returning == false) {
+                document.getElementById("bck3").style.animation = "rotate-upwards 2s linear 0s 1 normal forwards";
+                document.getElementById("stk").style.animation = "move-downwards-34 2s linear 0s 1 normal forwards";
+                returning = true;
+                return;
+            }
+            if(state == 3 && returning){
+                document.getElementById("bck3").style.animation = "rotate-downwards 2s linear 0s 1 normal forwards";
+                document.getElementById("stk").style.animation = "move-upwards-34 2s linear 0s 1 normal forwards";
+                state--;
+                return;
+            }
+            if(state == 2 && returning){
+                document.getElementById("bck2").style.animation = "rotate-downwards 2s linear 0s 1 normal forwards";
+                document.getElementById("stk").style.animation = "move-upwards-23 2s linear 0s 1 normal forwards";
+                state--;
+                return;
+            }
+            if(state == 1 && returning) {
+                document.getElementById("bck1").style.animation = "rotate-downwards 2s linear 0s 1 normal forwards";
+                document.getElementById("stk").style.animation = "move-upwards-12 2s linear 0s 1 normal forwards";
+                returning = false;
+            }
+        }
+    </script>
+
+
+</head>
+<body>
+    <div class="scene">
+        <div id = "card1"  class="card">
+            <div id="page2" class="card__face card__face--front">
+                <img id = "behindwindow" src="https://images.freeimages.com/images/small-previews/7d0/nature-1408559.jpg" alt="nature">
+                <div id = "win1" class = "win" onclick = "changeWindow()">
+
+                </div>
+                <div id = "win2" class = "win" onclick = "changeWindow()">
+
+                </div>
+                <button onclick = "SecondtoFirst()" id = "SecondtoFirstPg"> ← </button>
+            </div>
+            <div id="page1" class="card__face card__face--back">
+
+                <div id="firstpageimgbck">
+                    <div onclick="openSideWindows()" id = "sidewin1" class="sidewin">
+                        PHOTO
+                    </div>
+                    <bck id = "mainbck" class = "imgbackground">
+                        <img src="https://images.freeimages.com/images/small-previews/9df/nature-1370816.jpg" alt="nature">
+                    </bck>
+                    <div onclick="openSideWindows()" id = "sidewin2" class="sidewin">
+                        ALBUM
+                    </div>
+                </div>
+
+                <h1>INTERACTIVE PHOTO ALBUM</h1>
+
+                <button onclick = "FirsttoSecond()" id = "FirsttoSecondPg"> → </button>
+            </div>
+        </div>
+        <div id = "card2"  class="card">
+            <div id="page4" class="card__face card__face--front">
+                <button onclick = "ThirdtoSecond()" id = "ThirdtoSecondPg"> ← </button>
+            </div>
+
+            <div id="page3" class="card__face card__face--back">
+
+                <bck id = "bck1" class = "imgbackground">
+                    <img src="https://media.istockphoto.com/photos/woman-standing-and-looking-at-lago-di-carezza-in-dolomites-picture-id1038870630?b=1&k=20&m=1038870630&s=170x170&h=NtZzd58XOV5_VB9cvLomvAQyrD01KSTTyU_6uq2l8Oo=" alt="nature">
+                </bck>
+                <bck id = "bck2" class = "imgbackground">
+                    <img src="https://media.istockphoto.com/photos/sunset-with-pebbles-on-beach-in-nice-france-picture-id1157205177?b=1&k=20&m=1157205177&s=170x170&h=_xBsiB5JQuGwmCVfszA8NOjQrF4V1hNG__8dkUT7b-Q=" alt="stones">
+                </bck>
+                <bck id = "bck3" class = "imgbackground">
+                    <img src="https://media.istockphoto.com/photos/path-through-sunlit-forest-picture-id1205214235?b=1&k=20&m=1205214235&s=170x170&h=L-Rp5tVf_jYNBc9xFGGerPMfEogb_ldaijOUd7CCn6U=" alt="forest">
+                </bck>
+                <bck id = "bck4" class = "imgbackground">
+                    <img src="https://media.istockphoto.com/photos/sunrise-on-a-lake-picture-id1043560968?b=1&k=20&m=1043560968&s=170x170&h=YiSuIs6IhmaxA309RIktnvZjTLqLTd8QDDe2_r_fylc=" alt="river">
+                </bck>
+
+                <stk onclick = "changePhoto()" id="stk"></stk>
+
+                <button onclick = "SecondtoThird()" id = "SecondtoThirdPg"> → </button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
